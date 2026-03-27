@@ -106,22 +106,41 @@ public class BST<E extends Comparable<E>> implements Tree<E> {
         // TODO Case 2: current has one child
         //   -- set parent's pointer to current's only child
         //   -- handle the special case where current is the root
+
         if (current.left == null || current.right == null){
-            if (parent.left == current){
-                parent.left = current;
+            if (parent == null){
+                root = current.right;
             }
             else {
-                parent.right = current;
+                if (e.compareTo(parent.element) < 0){
+                    parent.left = current.left;
+                } else {
+                    parent.right = current.right;
+                }
             }
-        }
+        } else {
 
         // TODO Case 3: current has two children
         //   -- find the in-order successor: go right once, then left as far as possible
         //   -- copy successor's value into current
         //   -- delete the successor (it has at most one child, so Case 1 or 2)
-
         // TODO: decrement size and return true
-        return false; // replace this
+            TreeNode<E> parentOfRightMost = current;
+            TreeNode<E> rightMost = current.left;
+
+            while (rightMost.right != null){
+                parentOfRightMost = rightMost;
+            }
+
+            current.element = rightMost.element;
+
+            if (parentOfRightMost.right == rightMost){
+                parentOfRightMost.right = rightMost.left;
+            } else {
+                parentOfRightMost.left = rightMost.left;
+            }
+        }
+        return true;
     }
 
     // ── Inorder traversal ─────────────────────────────────────────────────
