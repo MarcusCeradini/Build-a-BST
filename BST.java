@@ -83,8 +83,8 @@ public class BST<E extends Comparable<E>> implements Tree<E> {
 
         while (current != null) {
             int cmp = e.compareTo(current.element);
-            if      (cmp < 0) { parent = current; current = current.left; }
-            else if (cmp > 0) { parent = current; current = current.right; }
+            if      (cmp < 0) { parent = current; current = current.left;}
+            else if (cmp > 0) { parent = current; current = current.right;}
             else break; // found
         }
 
@@ -97,47 +97,53 @@ public class BST<E extends Comparable<E>> implements Tree<E> {
         if (current.left == null && current.right == null){
             if (parent.left == current){
                 parent.left = null;
+                size--;
             }
             else {
                 parent.right = null;
-            }
-        }
-
-        // TODO Case 2: current has one child
-        //   -- set parent's pointer to current's only child
-        //   -- handle the special case where current is the root
-
-        if (current.left == null || current.right == null){
-            if (parent == null){
-                root = current.right;
-            }
-            else {
-                if (e.compareTo(parent.element) < 0){
-                    parent.left = current.left;
-                } else {
-                    parent.right = current.right;
-                }
+                size--;
             }
         } else {
+            // TODO Case 2: current has one child
+            //   -- set parent's pointer to current's only child
+            //   -- handle the special case where current is the root
 
-        // TODO Case 3: current has two children
-        //   -- find the in-order successor: go right once, then left as far as possible
-        //   -- copy successor's value into current
-        //   -- delete the successor (it has at most one child, so Case 1 or 2)
-        // TODO: decrement size and return true
-            TreeNode<E> parentOfRightMost = current;
-            TreeNode<E> rightMost = current.left;
-
-            while (rightMost.right != null){
-                parentOfRightMost = rightMost;
-            }
-
-            current.element = rightMost.element;
-
-            if (parentOfRightMost.right == rightMost){
-                parentOfRightMost.right = rightMost.left;
+            if (current.left == null || current.right == null){
+                if (parent == null){
+                    root = current.right;
+                }
+                else {
+                    if (e.compareTo(parent.element) < 0){
+                        parent.left = current.left;
+                        size--;
+                    } else {
+                        parent.right = current.right;
+                        size--;
+                    }
+                }
             } else {
-                parentOfRightMost.left = rightMost.left;
+
+            // TODO Case 3: current has two children
+            //   -- find the in-order successor: go right once, then left as far as possible
+            //   -- copy successor's value into current
+            //   -- delete the successor (it has at most one child, so Case 1 or 2)
+            // TODO: decrement size and return true
+                TreeNode<E> parentOfRightMost = current;
+                TreeNode<E> rightMost = current.left;
+
+                while (rightMost.right != null){
+                    parentOfRightMost = rightMost;
+                }
+
+                current.element = rightMost.element;
+
+                if (parentOfRightMost.right == rightMost){
+                    parentOfRightMost.right = rightMost.left;
+                    size--;
+                } else {
+                    parentOfRightMost.left = rightMost.left;
+                    size--;
+                }
             }
         }
         return true;
